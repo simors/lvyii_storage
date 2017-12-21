@@ -1,0 +1,22 @@
+{
+  "name": "lvyii_storage",
+  "version": "0.0.1",
+  "description": "Storage for Lvyii",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/simors/lvyii_storage.git"
+  },
+  "keywords": [
+    "lvyii"
+  ],
+  "author": "lvyii",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/simors/lvyii_storage/issues"
+  },
+  "homepage": "https://github.com/simors/lvyii_storage#readme"
+}
