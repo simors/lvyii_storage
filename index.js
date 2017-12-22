@@ -1,3 +1,1 @@
-/**
- * Created by yangyang on 2017/12/21.
- */
+module.exports = require('./src');
