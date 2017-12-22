@@ -12,5 +12,6 @@ LY.localStorage = require('./localstorage');
 LY.Error = require('./error');
 
 require('./init');
+require('./cloudfunction')(LY);
 
 module.exports = LY;
