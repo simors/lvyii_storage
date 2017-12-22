@@ -45,7 +45,7 @@ LY.init = function init(options) {
   LY._config.applicationId = appId;
   LY._config.applicationKey = appKey;
   if (typeof production !== 'undefined') LY._config.production = production;
-  LY._setServerURLs(extend({}, LY._config.serverURLs, serverURLs));
+  LY._setServerURLs(serverURLs);
 };
 
 /**
