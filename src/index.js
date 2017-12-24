@@ -11,6 +11,7 @@ LY.Promise = require('./promise');
 LY.localStorage = require('./localstorage');
 LY.Error = require('./error');
 
+require('./file')(LY);
 require('./init');
 require('./cloudfunction')(LY);
 
