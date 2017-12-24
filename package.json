@@ -1,6 +1,6 @@
 {
   "name": "lvyii_storage",
-  "version": "0.0.3",
+  "version": "0.0.3_beta",
   "description": "Storage for Lvyii",
   "main": "index.js",
   "scripts": {
