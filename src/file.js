@@ -137,17 +137,18 @@ module.exports = function(LY) {
     let owner;
     if (data && data.owner) {
       owner = data.owner;
-    } else if (!LY._config.disableCurrentUser) {
-      try {
-        owner = LY.User.current();
-      } catch (error) {
-        if ('SYNC_API_NOT_AVAILABLE' === error.code) {
-          console.warn('Get current user failed. It seems this runtime use an async storage system, please create LY.File in the callback of LY.User.currentAsync().');
-        } else {
-          throw error;
-        }
-      }
     }
+    // else if (!LY._config.disableCurrentUser) {
+    //   try {
+    //     owner = LY.User.current();
+    //   } catch (error) {
+    //     if ('SYNC_API_NOT_AVAILABLE' === error.code) {
+    //       console.warn('Get current user failed. It seems this runtime use an async storage system, please create LY.File in the callback of LY.User.currentAsync().');
+    //     } else {
+    //       throw error;
+    //     }
+    //   }
+    // }
 
     this.attributes.metaData.owner = owner ? owner.id : 'unknown';
 
