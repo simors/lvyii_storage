@@ -3,6 +3,8 @@
  */
 'use strict';
 
+require('./polyfills');
+
 var LY = require('./ly');
 
 LY._ = require('underscore');

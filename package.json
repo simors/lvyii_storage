@@ -1,10 +1,15 @@
 {
   "name": "lvyii_storage",
-  "version": "0.0.3_beta",
+  "version": "0.0.4",
   "description": "Storage for Lvyii",
-  "main": "index.js",
+  "main": "./dist/node/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:node": "gulp babel-node",
+    "build:browser": "cross-env CLIENT_PLATFORM=Browser webpack --config webpack/browser.js",
+    "build:rn": "cross-env CLIENT_PLATFORM=ReactNative webpack --config webpack/rn.js",
+    "build:weapp": "cross-env CLIENT_PLATFORM=Weapp webpack --config webpack/weapp.js",
+    "build": "gulp build && npm run build:browser && npm run build:rn && npm run build:weapp"
   },
   "repository": {
     "type": "git",
@@ -26,5 +31,44 @@
     "md5": "^2.2.1",
     "superagent": "^3.8.2",
     "underscore": "^1.8.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-istanbul": "^4.1.5",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "cross-env": "^5.1.3",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^7.0.0",
+    "gulp-clean": "^0.3.2",
+    "gulp-shell": "^0.6.3",
+    "mocha": "^4.0.1",
+    "qiniu": "^7.1.1",
+    "should": "^13.1.3",
+    "weapp-polyfill": "^3.0.0",
+    "webpack": "^3.10.0",
+    "webpack-strip-block": "^0.2.0"
+  },
+  "browser": {
+    "./src/utils/localstorage.js": "./src/utils/localstorage-browser.js",
+    "./src/utils/parse-base64.js": "./src/utils/parse-base64-browser.js",
+    "./src/ua/comments.js": "./src/ua/comments-browser.js",
+    "./dist/node/index.js": "./dist/av-min.js"
+  },
+  "react-native": {
+    "./src/utils/localstorage.js": "./src/utils/localstorage-rn.js",
+    "./dist/node/index.js": "./dist/av-rn-min.js"
+  },
+  "weapp": {
+    "./src/polyfills/index.js": "./src/polyfills/index-weapp.js",
+    "./dist/node/index.js": "./dist/av-weapp-min.js"
+  },
+  "nyc": {
+    "require": [
+      "babel-register"
+    ],
+    "sourceMap": false,
+    "instrument": false
   }
 }
