@@ -11,7 +11,7 @@ exports.create = () => ({
   output: {
     filename: '[name].js',
     libraryTarget: 'umd2',
-    library: 'AV',
+    library: 'LY',
     path: path.resolve(__dirname, '../dist'),
   },
   resolve: {},
