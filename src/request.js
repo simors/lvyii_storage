@@ -1,26 +1,26 @@
 'use strict';
 
-var _ = require('underscore');
-var md5 = require('md5');
+const _ = require('underscore');
+const md5 = require('md5');
+const {
+  extend,
+} = require('underscore');
+const Promise = require('./promise');
+const LY = require('./ly');
 
-var _require = require('underscore'),
-    extend = _require.extend;
-
-var Promise = require('./promise');
-var LY = require('./ly');
-
-var _require2 = require('./utils'),
-    getSessionToken = _require2.getSessionToken,
-    ajax = _require2.ajax;
+const {
+  getSessionToken,
+  ajax,
+} = require('./utils');
 
 // 计算 X-LY-Sign 的签名方法
-var sign = function sign(key) {
-  var now = new Date().getTime();
-  var signature = md5(now + key);
+const sign = (key) => {
+  const now = new Date().getTime();
+  const signature = md5(now + key);
   return signature + ',' + now;
 };
 
-var setAppKey = function setAppKey(headers, signKey) {
+const setAppKey = (headers, signKey) => {
   if (signKey) {
     headers['X-LY-Sign'] = sign(LY.applicationKey);
   } else {
@@ -28,11 +28,8 @@ var setAppKey = function setAppKey(headers, signKey) {
   }
 };
 
-var setHeaders = function setHeaders() {
-  var authOptions = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-  var signKey = arguments[1];
-
-  var headers = {
+const setHeaders = (authOptions = {}, signKey) => {
+  const headers = {
     'X-LY-Id': LY.applicationId,
     'Content-Type': 'application/json;charset=UTF-8'
   };
@@ -44,7 +41,7 @@ var setHeaders = function setHeaders() {
 
   return Promise.resolve().then(function () {
     // Pass the session token
-    var sessionToken = getSessionToken(authOptions);
+    const sessionToken = getSessionToken(authOptions);
     if (sessionToken) {
       headers['X-LY-Session'] = sessionToken;
     }
@@ -52,17 +49,15 @@ var setHeaders = function setHeaders() {
   });
 };
 
-var createApiUrl = function createApiUrl(_ref) {
-  var _ref$service = _ref.service,
-      service = _ref$service === undefined ? 'api' : _ref$service,
-      _ref$version = _ref.version,
-      version = _ref$version === undefined ? '1' : _ref$version,
-      path = _ref.path;
-
-  var apiURL = LY._config.serverURLs[service];
-
-  if (!apiURL) throw new Error('undefined server URL for ' + service);
-
+const createApiUrl = ({
+  service = 'engine',
+  version = '1',
+  path
+}) => {
+  let apiURL = AV._config.serverURLs[service];
+  
+  if (!apiURL) throw new Error(`undefined server URL for ${service}`);
+  
   if (apiURL.charAt(apiURL.length - 1) !== '/') {
     apiURL += '/';
   }
@@ -70,7 +65,7 @@ var createApiUrl = function createApiUrl(_ref) {
   if (path) {
     apiURL += path;
   }
-
+  
   return apiURL;
 };
 
@@ -87,73 +82,59 @@ var createApiUrl = function createApiUrl(_ref) {
  * @param {String} [options.service = 'api']
  * @param {String} [options.version = '1.1']
  */
-var request = function request(_ref2) {
-  var service = _ref2.service,
-      version = _ref2.version,
-      method = _ref2.method,
-      path = _ref2.path,
-      query = _ref2.query,
-      _ref2$data = _ref2.data,
-      data = _ref2$data === undefined ? {} : _ref2$data,
-      authOptions = _ref2.authOptions,
-      _ref2$signKey = _ref2.signKey,
-      signKey = _ref2$signKey === undefined ? true : _ref2$signKey;
-
+const request = ({ service, version, method, path, query, data = {}, authOptions, signKey = true }) => {
   if (!(LY.applicationId && LY.applicationKey)) {
     throw new Error('Not initialized');
   }
-  var url = createApiUrl({ service: service, path: path, version: version });
-  return setHeaders(authOptions, signKey).then(function (headers) {
-    return ajax({ method: method, url: url, query: query, data: data, headers: headers }).catch(function (error) {
-      var errorJSON = {
-        code: error.code || -1,
-        error: error.message || error.responseText
-      };
-      if (error.response && error.response.code) {
-        errorJSON = error.response;
-      } else if (error.responseText) {
-        try {
-          errorJSON = JSON.parse(error.responseText);
-        } catch (e) {
-          // If we fail to parse the error text, that's okay.
+  const url = createApiUrl({ service, path, version });
+  return setHeaders(authOptions, signKey).then(
+    headers => ajax({ method, url, query, data, headers })
+      .catch((error) => {
+        let errorJSON = {
+          code: error.code || -1,
+          error: error.message || error.responseText
+        };
+        if (error.response && error.response.code) {
+          errorJSON = error.response;
+        } else if (error.responseText) {
+          try {
+            errorJSON = JSON.parse(error.responseText);
+          } catch (e) {
+            // If we fail to parse the error text, that's okay.
+          }
         }
-      }
-      errorJSON.rawMessage = errorJSON.rawMessage || errorJSON.error;
-      if (!LY._sharedConfig.keepErrorRawMessage) {
-        errorJSON.error += ' [' + (error.statusCode || 'N/A') + ' ' + method + ' ' + url + ']';
-      }
-      // Transform the error into an instance of LYError by trying to parse
-      // the error string as JSON.
-      var err = new Error(errorJSON.error);
-      delete errorJSON.error;
-      throw _.extend(err, errorJSON);
-    });
-  });
+        errorJSON.rawMessage = errorJSON.rawMessage || errorJSON.error;
+        if (!LY._sharedConfig.keepErrorRawMessage) {
+          errorJSON.error += ` [${error.statusCode||'N/A'} ${method} ${url}]`;
+        }
+        // Transform the error into an instance of LYError by trying to parse
+        // the error string as JSON.
+        const err = new Error(errorJSON.error);
+        delete errorJSON.error;
+        throw _.extend(err, errorJSON);
+      })
+  );
 };
 
 // lagecy request
-var _request = function _request(route, className, objectId, method) {
-  var data = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
-  var authOptions = arguments[5];
-  var query = arguments[6];
-
-  var path = '';
-  if (route) path += '/' + route;
-  if (className) path += '/' + className;
-  if (objectId) path += '/' + objectId;
+const _request = (route, className, objectId, method, data = {}, authOptions, query) => {
+  let path = '';
+  if (route) path += `/${route}`;
+  if (className) path += `/${className}`;
+  if (objectId) path += `/${objectId}`;
   // for migeration
   if (data && data._fetchWhenSave) throw new Error('_fetchWhenSave should be in the query');
   if (data && data._where) throw new Error('_where should be in the query');
-  if (method && method.toLowerCase() === 'get') {
+  if (method && (method.toLowerCase() === 'get')) {
     query = extend({}, query, data);
     data = null;
   }
   return request({
-    method: method,
-    path: path,
-    query: query,
-    data: data,
-    authOptions: authOptions
+    method,
+    path,
+    query,
+    data,
+    authOptions,
   });
 };
 

@@ -1,12 +1,8 @@
 'use strict';
 
-var _ = require('underscore');
-
-var _require = require('./request'),
-    _request = _require._request,
-    request = _require.request;
-
-var Promise = require('./promise');
+const _ = require('underscore');
+const { _request, request } = require('./request');
+const Promise = require('./promise');
 
 module.exports = function (LY) {
   /**

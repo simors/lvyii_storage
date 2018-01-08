@@ -1,5 +1,3 @@
-'use strict';
-
 var _ = require('underscore');
 var Promise = require('../promise');
 
@@ -15,7 +13,12 @@ var Promise = require('../promise');
 //   Promise clearAsync();
 // }
 var Storage = {};
-var apiNames = ['getItem', 'setItem', 'removeItem', 'clear'];
+var apiNames = [
+  'getItem',
+  'setItem',
+  'removeItem',
+  'clear'
+];
 
 var localStorage = global.localStorage;
 
@@ -31,8 +34,8 @@ try {
 }
 
 // in browser, `localStorage.async = false` will excute `localStorage.setItem('async', false)`
-_(apiNames).each(function (apiName) {
-  Storage[apiName] = function () {
+_(apiNames).each(function(apiName) {
+  Storage[apiName] = function() {
     return localStorage[apiName].apply(localStorage, arguments);
   };
 });

@@ -2,19 +2,18 @@
 
 var LY = require('./ly');
 
-var _require = require('./utils'),
-    isNullOrUndefined = _require.isNullOrUndefined;
-
-var _require2 = require('underscore'),
-    extend = _require2.extend,
-    isObject = _require2.isObject;
+const {
+  isNullOrUndefined,
+} = require('./utils');
+const {
+  extend,
+  isObject,
+} = require('underscore');
 
 var fillServerURLs = function fillServerURLs(url) {
   return {
-    push: url,
-    stats: url,
-    engine: url,
-    api: url
+    auth: url,
+    engine: url
   };
 };
 
@@ -89,15 +88,13 @@ LY.keepErrorRawMessage = function (value) {
 // backword compatible
 LY.initialize = LY.init;
 
-var defineConfig = function defineConfig(property) {
-  return Object.defineProperty(LY, property, {
-    get: function get() {
-      return LY._config[property];
-    },
-    set: function set(value) {
-      LY._config[property] = value;
-    }
-  });
-};
+const defineConfig = property => Object.defineProperty(LY, property, {
+  get() {
+    return LY._config[property];
+  },
+  set(value) {
+    LY._config[property] = value;
+  },
+});
 
 ['applicationId', 'applicationKey'].forEach(defineConfig);

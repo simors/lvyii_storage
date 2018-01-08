@@ -1,31 +1,21 @@
-'use strict';
+const _ = require('underscore');
+const request = require('superagent');
+const debug = require('debug');
+const debugRequest = debug('lvyii:request');
+const debugRequestError = debug('lvyii:request:error');
+const Promise = require('../promise');
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+let requestsCount = 0;
 
-var _ = require('underscore');
-var request = require('superagent');
-var debug = require('debug')('lvyii:request');
-var Promise = require('../promise');
+const ajax = ({ method, url, query, data, headers = {}, onprogress }) => {
+  const count = requestsCount++;
 
-var requestsCount = 0;
+  debugRequest(`request(${count})`, method, url, query, data, headers);
 
-var ajax = function ajax(_ref) {
-  var method = _ref.method,
-      url = _ref.url,
-      query = _ref.query,
-      data = _ref.data,
-      _ref$headers = _ref.headers,
-      headers = _ref$headers === undefined ? {} : _ref$headers,
-      onprogress = _ref.onprogress;
-
-  var count = requestsCount++;
-
-  debug('request(' + count + ')', method, url, query, data, headers);
-
-  var flattenedQuery = {};
+  const flattenedQuery = {};
   if (query) {
-    for (var k in query) {
-      if (_typeof(query[k]) === 'object') {
+    for (const k in query) {
+      if (typeof query[k] === 'object') {
         flattenedQuery[k] = JSON.stringify(query[k]);
       } else {
         flattenedQuery[k] = query[k];
@@ -33,34 +23,38 @@ var ajax = function ajax(_ref) {
     }
   }
 
-  return new Promise(function (resolve, reject) {
-    var req = request(method, url).set(headers).query(flattenedQuery).send(data);
+  return new Promise((resolve, reject) => {
+    const req = request(method, url)
+      .set(headers)
+      .query(flattenedQuery)
+      .send(data);
     if (onprogress) {
       req.on('progress', onprogress);
     }
-    req.end(function (err, res) {
-      if (res) {
-        debug('response(' + count + ')', res.status, res.body || res.text, res.header);
-      }
+    req.end((err, res) => {
       if (err) {
         if (res) {
+          if (!debug.enabled('lvyii:request')) {
+            debugRequestError(`request(${count})`, method, url, query, data, headers);
+          }
+          debugRequestError(`response(${count})`, res.status, res.body || res.text, res.header);
           err.statusCode = res.status;
           err.responseText = res.text;
           err.response = res.body;
         }
         return reject(err);
       }
+      debugRequest(`response(${count})`, res.status, res.body || res.text, res.header);
       return resolve(res.body);
     });
   });
 };
 
-// Helper function to check null or undefined.
-var isNullOrUndefined = function isNullOrUndefined(x) {
-  return _.isNull(x) || _.isUndefined(x);
-};
 
-var ensureArray = function ensureArray(target) {
+// Helper function to check null or undefined.
+const isNullOrUndefined = (x) => _.isNull(x) || _.isUndefined(x);
+
+const ensureArray = target => {
   if (_.isArray(target)) {
     return target;
   }
@@ -70,13 +64,8 @@ var ensureArray = function ensureArray(target) {
   return [target];
 };
 
-var transformFetchOptions = function transformFetchOptions() {
-  var _ref2 = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
-      keys = _ref2.keys,
-      include = _ref2.include,
-      includeACL = _ref2.includeACL;
-
-  var fetchOptions = {};
+const transformFetchOptions = ({ keys, include, includeACL } = {}) => {
+  const fetchOptions = {};
   if (keys) {
     fetchOptions.keys = ensureArray(keys).join(',');
   }
@@ -89,28 +78,26 @@ var transformFetchOptions = function transformFetchOptions() {
   return fetchOptions;
 };
 
-var getSessionToken = function getSessionToken(authOptions) {
+const getSessionToken = (authOptions) => {
   if (authOptions.sessionToken) {
     return authOptions.sessionToken;
   }
-  if (authOptions.user && typeof authOptions.user.getSessionToken === 'function') {
+  if (
+    authOptions.user && typeof authOptions.user.getSessionToken === 'function'
+  ) {
     return authOptions.user.getSessionToken();
   }
 };
 
-var tap = function tap(interceptor) {
-  return function (value) {
-    return interceptor(value), value;
-  };
-};
+const tap = interceptor => value => ((interceptor(value), value));
 
 // Shared empty constructor function to aid in prototype-chain creation.
-var EmptyConstructor = function EmptyConstructor() {};
+const EmptyConstructor = function() {};
 
 // Helper function to correctly set up the prototype chain, for subclasses.
 // Similar to `goog.inherits`, but uses a hash of prototype properties and
 // class properties to be extended.
-var inherits = function inherits(parent, protoProps, staticProps) {
+const inherits = function inherits(parent, protoProps, staticProps) {
   var child;
 
   // The constructor function for the new subclass is either defined by you
@@ -120,9 +107,7 @@ var inherits = function inherits(parent, protoProps, staticProps) {
     child = protoProps.constructor;
   } else {
     /** @ignore */
-    child = function child() {
-      parent.apply(this, arguments);
-    };
+    child = function() { parent.apply(this, arguments); };
   }
 
   // Inherit class (static) properties from parent.
@@ -155,7 +140,10 @@ var inherits = function inherits(parent, protoProps, staticProps) {
 };
 
 function parseDate(iso8601) {
-  var regexp = new RegExp("^([0-9]{1,4})-([0-9]{1,2})-([0-9]{1,2})" + "T" + "([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})" + "(.([0-9]+))?" + "Z$");
+  var regexp = new RegExp(
+    "^([0-9]{1,4})-([0-9]{1,2})-([0-9]{1,2})" + "T" +
+    "([0-9]{1,2}):([0-9]{1,2}):([0-9]{1,2})" +
+    "(.([0-9]+))?" + "Z$");
   var match = regexp.exec(iso8601);
   if (!match) {
     return null;
@@ -172,13 +160,42 @@ function parseDate(iso8601) {
   return new Date(Date.UTC(year, month, day, hour, minute, second, milli));
 }
 
+const setValue = (target, key, value) => {
+  // '.' is not allowed in Class keys, escaping is not in concern now.
+  const segs = key.split('.');
+  const lastSeg = segs.pop();
+  let currentTarget = target;
+  segs.forEach((seg) => {
+    if (currentTarget[seg] === undefined) currentTarget[seg] = {};
+    currentTarget = currentTarget[seg];
+  });
+  currentTarget[lastSeg] = value;
+  return target;
+};
+
+const findValue = (target, key) => {
+  const segs = key.split('.');
+  const lastSeg = segs.pop();
+  let currentTarget = target;
+  for (let i = 0; i < segs.length; i++) {
+    currentTarget = currentTarget[segs[i]];
+    if (currentTarget === undefined) {
+      return [undefined, undefined, lastSeg];
+    }
+  }
+  const value = currentTarget[lastSeg];
+  return [value, currentTarget, lastSeg];
+};
+
 module.exports = {
-  ajax: ajax,
-  isNullOrUndefined: isNullOrUndefined,
-  ensureArray: ensureArray,
-  transformFetchOptions: transformFetchOptions,
-  getSessionToken: getSessionToken,
-  tap: tap,
-  inherits: inherits,
-  parseDate: parseDate
+  ajax,
+  isNullOrUndefined,
+  ensureArray,
+  transformFetchOptions,
+  getSessionToken,
+  tap,
+  inherits,
+  parseDate,
+  setValue,
+  findValue,
 };

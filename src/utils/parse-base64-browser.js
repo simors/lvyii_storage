@@ -1,6 +1,4 @@
-'use strict';
-
-var dataURItoBlob = function dataURItoBlob(dataURI, type) {
+var dataURItoBlob = function(dataURI, type) {
   var byteString;
 
   // 传入的 base64，不是 dataURL
@@ -13,10 +11,10 @@ var dataURItoBlob = function dataURItoBlob(dataURI, type) {
     byteString = unescape(dataURI.split(',')[1]);
   }
   var ia = new Uint8Array(byteString.length);
-  for (var i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
+  for (var i = 0; i < byteString.length; i ++) {
+      ia[i] = byteString.charCodeAt(i);
   }
-  return new Blob([ia], { type: type });
+  return new Blob([ia], {type});
 };
 
 module.exports = dataURItoBlob;
