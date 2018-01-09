@@ -424,7 +424,7 @@ module.exports = function(LY) {
       if (!this.id) {
         return Promise.reject(new Error('The file id is not eixsts.'));
       }
-      var request = LYRequest("files", null, this.id, 'DELETE', null, options);
+      var request = LYRequest("files", null, 'DELETE', null, options);
       return request;
     },
 
@@ -452,7 +452,7 @@ module.exports = function(LY) {
         metaData: this.attributes.metaData,
       };
       this._qiniu_key = key;
-      return LYRequest(route, null, null, 'POST', data);
+      return LYRequest(route, null, 'POST', data);
     },
 
     /**
@@ -528,7 +528,7 @@ module.exports = function(LY) {
             mime_type: this.mimeType,
             url: this.attributes.url,
           };
-          this._previousSave = LYRequest('files', this.attributes.name, null, 'post', data).then((response) => {
+          this._previousSave = LYRequest('files', null, 'post', data).then((response) => {
             this.attributes.name = response.name;
             this.attributes.url = response.url;
             this.id = response.objectId;
@@ -543,7 +543,7 @@ module.exports = function(LY) {
     },
 
     _callback(success) {
-      LYRequest('fileCallback', null, null, 'post', {
+      LYRequest('fileCallback', null, 'post', {
         token: this._token,
         result: success,
       }).catch(debug);

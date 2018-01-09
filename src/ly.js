@@ -23,6 +23,29 @@ LY._sharedConfig = {
   userAgent: userAgent,
 };
 
+/**
+ * Returns prefix for localStorage keys used by this instance of LY.
+ * @param {String} path The relative suffix to append to it.
+ *     null or undefined is treated as the empty string.
+ * @return {String} The full key name.
+ * @private
+ */
+LY._getLYPath = function(path) {
+  if (!LY.applicationId) {
+    throw new Error("You need to call LY.initialize before using LY.");
+  }
+  if (!path) {
+    path = "";
+  }
+  if (!_.isString(path)) {
+    throw new Error("Tried to get a localStorage path that wasn't a String.");
+  }
+  if (path[0] === "/") {
+    path = path.substring(1);
+  }
+  return "LY/" + LY.applicationId + "/" + path;
+};
+
 // A self-propagating extend function.
 LY._extend = function (protoProps, classProps) {
   var child = inherits(this, protoProps, classProps);

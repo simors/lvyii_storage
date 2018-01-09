@@ -54,7 +54,7 @@ const createApiUrl = ({
   version = '1',
   path
 }) => {
-  let apiURL = AV._config.serverURLs[service];
+  let apiURL = LY._config.serverURLs[service];
   
   if (!apiURL) throw new Error(`undefined server URL for ${service}`);
   
@@ -117,20 +117,17 @@ const request = ({ service, version, method, path, query, data = {}, authOptions
 };
 
 // lagecy request
-const _request = (route, className, objectId, method, data = {}, authOptions, query) => {
+const _request = (route, service, method, data = {}, authOptions, query) => {
   let path = '';
   if (route) path += `/${route}`;
-  if (className) path += `/${className}`;
-  if (objectId) path += `/${objectId}`;
   // for migeration
-  if (data && data._fetchWhenSave) throw new Error('_fetchWhenSave should be in the query');
-  if (data && data._where) throw new Error('_where should be in the query');
   if (method && (method.toLowerCase() === 'get')) {
     query = extend({}, query, data);
     data = null;
   }
   return request({
     method,
+    service,
     path,
     query,
     data,

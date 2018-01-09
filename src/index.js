@@ -15,6 +15,7 @@ LY.Error = require('./error');
 
 require('./init');
 require('./cloudfunction')(LY);
+require('./user')(LY);
 require('./file')(LY);
 
 module.exports = LY;
