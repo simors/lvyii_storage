@@ -58,10 +58,10 @@ gulp.task('babel-node', ['clean-dist'], () => {
 // 上传到 CDN
 gulp.task('upload', () => {
   [
-    './dist/av-min.js',
-    './dist/av-weapp-min.js',
-    './dist/av.js',
-    './dist/av-weapp.js'
+    './dist/ly-min.js',
+    './dist/ly-weapp-min.js',
+    './dist/ly.js',
+    './dist/ly-weapp.js'
   ].map(uploadCDN).map(file => `${file}.map`).map(uploadCDN);
 });
 

@@ -1,6 +1,6 @@
 {
   "name": "lvyii_storage",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Storage for Lvyii",
   "main": "./dist/node/index.js",
   "scripts": {
@@ -55,15 +55,15 @@
     "./src/utils/localstorage.js": "./src/utils/localstorage-browser.js",
     "./src/utils/parse-base64.js": "./src/utils/parse-base64-browser.js",
     "./src/ua/comments.js": "./src/ua/comments-browser.js",
-    "./dist/node/index.js": "./dist/av-min.js"
+    "./dist/node/index.js": "./dist/ly-min.js"
   },
   "react-native": {
     "./src/utils/localstorage.js": "./src/utils/localstorage-rn.js",
-    "./dist/node/index.js": "./dist/av-rn-min.js"
+    "./dist/node/index.js": "./dist/ly-rn-min.js"
   },
   "weapp": {
     "./src/polyfills/index.js": "./src/polyfills/index-weapp.js",
-    "./dist/node/index.js": "./dist/av-weapp-min.js"
+    "./dist/node/index.js": "./dist/ly-weapp-min.js"
   },
   "nyc": {
     "require": [

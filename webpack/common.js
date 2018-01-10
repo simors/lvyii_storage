@@ -2,11 +2,11 @@ const path = require('path');
 const webpack = require('webpack');
 
 const entry = exports.entry = './src/index.js';
-exports.name = 'av';
+exports.name = 'ly';
 
 exports.create = () => ({
   entry: {
-    av: entry,
+    ly: entry,
   },
   output: {
     filename: '[name].js',
