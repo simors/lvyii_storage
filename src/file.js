@@ -3,7 +3,6 @@ const qiniu = require('./uploader/qiniu');
 const LYError = require('./error');
 const LYRequest = require('./request')._request;
 const Promise = require('./promise');
-const { tap, transformFetchOptions } = require('./utils');
 const debug = require('debug')('leancloud:file');
 const parseBase64 = require('./utils/parse-base64');
 

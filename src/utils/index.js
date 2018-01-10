@@ -64,29 +64,15 @@ const ensureArray = target => {
   return [target];
 };
 
-const transformFetchOptions = ({ keys, include, includeACL } = {}) => {
-  const fetchOptions = {};
-  if (keys) {
-    fetchOptions.keys = ensureArray(keys).join(',');
-  }
-  if (include) {
-    fetchOptions.include = ensureArray(include).join(',');
-  }
-  if (includeACL) {
-    fetchOptions.returnACL = includeACL;
-  }
-  return fetchOptions;
-};
-
 const getSessionToken = (authOptions) => {
   if (authOptions.sessionToken) {
     return authOptions.sessionToken;
   }
-  if (
-    authOptions.user && typeof authOptions.user.getSessionToken === 'function'
-  ) {
+  if (authOptions.user && typeof authOptions.user.getSessionToken === 'function') {
     return authOptions.user.getSessionToken();
   }
+  
+  return LY.User.getSessionToken()
 };
 
 const tap = interceptor => value => ((interceptor(value), value));
@@ -160,42 +146,12 @@ function parseDate(iso8601) {
   return new Date(Date.UTC(year, month, day, hour, minute, second, milli));
 }
 
-const setValue = (target, key, value) => {
-  // '.' is not allowed in Class keys, escaping is not in concern now.
-  const segs = key.split('.');
-  const lastSeg = segs.pop();
-  let currentTarget = target;
-  segs.forEach((seg) => {
-    if (currentTarget[seg] === undefined) currentTarget[seg] = {};
-    currentTarget = currentTarget[seg];
-  });
-  currentTarget[lastSeg] = value;
-  return target;
-};
-
-const findValue = (target, key) => {
-  const segs = key.split('.');
-  const lastSeg = segs.pop();
-  let currentTarget = target;
-  for (let i = 0; i < segs.length; i++) {
-    currentTarget = currentTarget[segs[i]];
-    if (currentTarget === undefined) {
-      return [undefined, undefined, lastSeg];
-    }
-  }
-  const value = currentTarget[lastSeg];
-  return [value, currentTarget, lastSeg];
-};
-
 module.exports = {
   ajax,
   isNullOrUndefined,
   ensureArray,
-  transformFetchOptions,
   getSessionToken,
   tap,
   inherits,
   parseDate,
-  setValue,
-  findValue,
 };

@@ -10,6 +10,9 @@ module.exports = function (LY) {
   LY.User = {
     // The currently logged-in user.
     _currentUser: null,
+    
+    // The currently logged-in user session token
+    _sessionToken: null,
   
     // The localStorage key suffix that the current user is stored under.
     _CURRENT_USER_KEY: "currentUser",
@@ -37,6 +40,20 @@ module.exports = function (LY) {
       });
     },
     
+    getSessionToken: function () {
+      if (LY.User._sessionToken) {
+        return LY.User._sessionToken
+      }
+      var userData = LY.localStorage.getItem(LY._getLYPath(LY.User._CURRENT_USER_KEY));
+      if (!userData) {
+        return null;
+      }
+      var json = JSON.parse(userData);
+      LY.User._currentUser = json;
+      LY.User._sessionToken = json.token
+      return LY.User._sessionToken
+    },
+    
     logout: function () {
       LY.User._currentUser = null
       return LY.localStorage.removeItemAsync(
@@ -45,9 +62,9 @@ module.exports = function (LY) {
     },
   
     /**
-     * Retrieves the currently logged in AVUser with a valid session,
+     * Retrieves the currently logged in user,
      * either from memory or localStorage, if necessary.
-     * @return {AV.User} The currently logged in AV.User.
+     * @return {LY.User} The currently logged in LY.User.
      */
     current: function() {
       if (LY.User._currentUser) {
@@ -69,6 +86,7 @@ module.exports = function (LY) {
         .then((user) => {
           loginUser = user
           LY.User._currentUser = loginUser
+          LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
         }).then(() => loginUser)
     },
@@ -79,6 +97,7 @@ module.exports = function (LY) {
         .then((user) => {
           loginUser = user
           LY.User._currentUser = loginUser
+          LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
         }).then(() => loginUser)
     },
@@ -89,6 +108,7 @@ module.exports = function (LY) {
         .then((user) => {
           loginUser = user
           LY.User._currentUser = loginUser
+          LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
         }).then(() => loginUser)
     }
