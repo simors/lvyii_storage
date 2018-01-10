@@ -71,8 +71,7 @@ const getSessionToken = (authOptions) => {
   if (authOptions.user && typeof authOptions.user.getSessionToken === 'function') {
     return authOptions.user.getSessionToken();
   }
-  
-  return LY.User.getSessionToken()
+  return null
 };
 
 const tap = interceptor => value => ((interceptor(value), value));
