@@ -3,7 +3,7 @@ const qiniu = require('./uploader/qiniu');
 const LYError = require('./error');
 const LYRequest = require('./request')._request;
 const Promise = require('./promise');
-const debug = require('debug')('leancloud:file');
+const debug = require('debug')('lvyii:file');
 const parseBase64 = require('./utils/parse-base64');
 
 module.exports = function(LY) {
@@ -123,39 +123,21 @@ module.exports = function(LY) {
         this._extName = extname(data.name);
       }
     }
-
-    if (!process.env.CLIENT_PLATFORM) {
-      if (data instanceof require('stream') && data.path) {
-        this._extName = extname(data.path);
-      }
-      if (Buffer.isBuffer(data)) {
-        this.attributes.metaData.size = data.length;
-      }
+  
+    /* NODE-ONLY:start */
+    if (data instanceof require('stream') && data.path) {
+      this._extName = extname(data.path);
     }
-
-    let owner;
-    if (data && data.owner) {
-      owner = data.owner;
+    if (Buffer.isBuffer(data)) {
+      this.attributes.metaData.size = data.length;
     }
-    // else if (!LY._config.disableCurrentUser) {
-    //   try {
-    //     owner = LY.User.current();
-    //   } catch (error) {
-    //     if ('SYNC_API_NOT_AVAILABLE' === error.code) {
-    //       console.warn('Get current user failed. It seems this runtime use an async storage system, please create LY.File in the callback of LY.User.currentAsync().');
-    //     } else {
-    //       throw error;
-    //     }
-    //   }
-    // }
-
-    this.attributes.metaData.owner = owner ? owner.id : 'unknown';
-
+    /* NODE-ONLY:end */
+  
     this.set('mime_type', mimeType);
   };
 
   /**
-   * Creates a fresh LY.File object with exists url for saving to AVOS Cloud.
+   * Creates a fresh LY.File object with exists url for saving to Lvyii Cloud.
    * @param {String} name the file name
    * @param {String} url the file url.
    * @param {Object} [metaData] the file metadata object.
@@ -182,81 +164,9 @@ module.exports = function(LY) {
     return file;
   };
 
-  /**
-   * Creates a file object with exists objectId.
-   * @param {String} objectId The objectId string
-   * @return {LY.File} the file object
-   */
-  LY.File.createWithoutData = function(objectId) {
-    var file = new LY.File();
-    file.id = objectId;
-    return file;
-  };
-
   _.extend(LY.File.prototype, /** @lends LY.File.prototype */ {
     className: '_File',
-
-    _toFullJSON(seenObjects, full = true) {
-      var json = _.clone(this.attributes);
-      LY._objectEach(json, function(val, key) {
-        json[key] = LY._encode(val, seenObjects, undefined, full);
-      });
-      LY._objectEach(this._operations, function(val, key) {
-        json[key] = val;
-      });
-
-      if (_.has(this, "id")) {
-        json.objectId = this.id;
-      }
-      _(['createdAt', 'updatedAt']).each((key) => {
-        if (_.has(this, key)) {
-          const val = this[key];
-          json[key] = _.isDate(val) ? val.toJSON() : val;
-        }
-      });
-      if (full) {
-        json.__type = "File";
-      }
-      return json;
-    },
-
-    /**
-     * Returns a JSON version of the file with meta data.
-     * Inverse to {@link LY.parseJSON}
-     * @since 2.0.0
-     * @return {Object}
-     */
-    toFullJSON(seenObjects = []) {
-      return this._toFullJSON(seenObjects);
-    },
-
-    /**
-     * Returns a JSON version of the object.
-     * @return {Object}
-     */
-    toJSON: function(key, holder, seenObjects = [this]) {
-      return this._toFullJSON(seenObjects, false);
-    },
-
-    /**
-     * Returns the ACL for this file.
-     * @returns {LY.ACL} An instance of LY.ACL.
-     */
-    getACL: function() {
-      return this._acl;
-    },
-
-    /**
-     * Sets the ACL to be used for this file.
-     * @param {LY.ACL} acl An instance of LY.ACL.
-     */
-    setACL: function(acl) {
-      if (!(acl instanceof LY.ACL)) {
-        return new LYError(LYError.OTHER_CAUSE, 'ACL must be a LY.ACL.');
-      }
-      this._acl = acl;
-    },
-
+  
     /**
      * Gets the name of the file. Before save is called, this is the filename
      * given by the user. After save is called, that name gets prefixed with a
@@ -265,16 +175,16 @@ module.exports = function(LY) {
     name: function() {
       return this.get('name');
     },
-
+  
     /**
      * Gets the url of the file. It is only available after you save the file or
-     * after you get the file from a LY.Object.
+     * after you get the file from a AV.Object.
      * @return {String}
      */
     url: function() {
       return this.get('url');
     },
-
+  
     /**
      * Gets the attributs of the file object.
      * @param {String} The attribute name which want to get.
@@ -282,20 +192,16 @@ module.exports = function(LY) {
      */
     get: function(attrName) {
       switch (attrName) {
-        case 'objectId':
-          return this.id;
         case 'url':
         case 'name':
         case 'mime_type':
         case 'metaData':
-        case 'createdAt':
-        case 'updatedAt':
           return this.attributes[attrName];
         default:
           return this.attributes.metaData[attrName];
       }
     },
-
+  
     /**
      * Set the metaData of the file object.
      * @param {Object} Object is an key value Object for setting metaData.
@@ -319,7 +225,7 @@ module.exports = function(LY) {
             break;
         }
       };
-
+    
       switch (args.length) {
         case 1:
           // 传入一个 Object
@@ -345,7 +251,7 @@ module.exports = function(LY) {
       this._uploadHeaders[key] = value;
       return this;
     },
-
+  
     /**
      * <p>Returns the file's metadata JSON object if no arguments is given.Returns the
      * metadata value if a key is given.Set metadata value if key and value are both given.</p>
@@ -378,7 +284,6 @@ module.exports = function(LY) {
      * @param {Number} scaleToFit 是否将图片自适应大小。默认为true。
      * @param {String} fmt 格式，默认为png，也可以为jpeg,gif等格式。
      */
-
     thumbnailURL: function(width, height, quality, scaleToFit, fmt) {
       const url = this.attributes.url;
       if (!url) {
@@ -396,7 +301,7 @@ module.exports = function(LY) {
       const mode = scaleToFit ? 2: 1;
       return url + '?imageView/' + mode + '/w/' + width + '/h/' + height + '/q/' + quality + '/format/' + fmt;
     },
-
+  
     /**
      * Returns the file's size.
      * @return {Number} The file's size in bytes.
@@ -406,15 +311,7 @@ module.exports = function(LY) {
     },
 
     /**
-     * Returns the file's owner.
-     * @return {String} The file's owner id.
-     */
-    ownerId: function() {
-      return this.metaData().owner;
-    },
-
-    /**
-     * Destroy the file.
+     * Destroy the file.  暂不支持此方法，以后实现
      * @param {AuthOptions} options
      * @return {Promise} A promise that is fulfilled when the destroy
      *     completes.
@@ -433,7 +330,7 @@ module.exports = function(LY) {
      * @return {Promise} Resolved with the response
      * @private
      */
-    _fileToken(type, route = 'function/fileTokens') {
+    _fileToken(type, route = 'api/fileTokens') {
       let name = this.attributes.name;
 
       let extName = extname(name);
@@ -446,7 +343,6 @@ module.exports = function(LY) {
       const data = {
         key,
         name,
-        ACL: this._acl,
         mime_type: type,
         metaData: this.attributes.metaData,
       };
@@ -476,7 +372,7 @@ module.exports = function(LY) {
               mimeType = uploadInfo.mime_type;
               this.set('mime_type', mimeType);
             }
-            this._token = uploadInfo.result.token;
+            this._token = uploadInfo.token;
             return Promise.resolve().then(() => {
               const data = this._data;
               if (data && data.base64) {
@@ -522,7 +418,6 @@ module.exports = function(LY) {
           // external link file.
           const data = {
             name: this.attributes.name,
-            ACL: this._acl,
             metaData: this.attributes.metaData,
             mime_type: this.mimeType,
             url: this.attributes.url,

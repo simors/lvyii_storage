@@ -5,9 +5,9 @@ const debug = require('debug')('qiniu');
 module.exports = function upload(uploadInfo, data, file, saveOptions = {}) {
   file.attributes.url = uploadInfo.url;
   file._bucket = uploadInfo.bucket;
-  file.id = uploadInfo.objectId;
+  file.id = uploadInfo.id;
   // Get the uptoken to upload files to qiniu.
-  const uptoken = uploadInfo.result.token;
+  const uptoken = uploadInfo.token;
   const uploadUrl = uploadInfo.upload_url || 'https://upload.qiniup.com';
   return new Promise((resolve, reject) => {
     const req = request('POST', uploadUrl)

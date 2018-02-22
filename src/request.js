@@ -52,7 +52,7 @@ const setHeaders = (authOptions = {}, signKey) => {
 };
 
 const createApiUrl = ({
-  service = 'engine',
+  service = 'api',
   version = '1',
   path
 }) => {

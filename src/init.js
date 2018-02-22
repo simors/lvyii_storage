@@ -13,6 +13,7 @@ const {
 var fillServerURLs = function fillServerURLs(url) {
   return {
     auth: url,
+    api: url,
     engine: url
   };
 };
