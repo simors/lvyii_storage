@@ -347,7 +347,7 @@ module.exports = function(LY) {
         metaData: this.attributes.metaData,
       };
       this._qiniu_key = key;
-      return LYRequest(route, null, 'POST', data);
+      return LYRequest(route, 'api', 'POST', data);
     },
 
     /**
