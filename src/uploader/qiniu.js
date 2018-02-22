@@ -22,6 +22,7 @@ module.exports = function upload(uploadInfo, data, file, saveOptions = {}) {
     req.end((err, res) => {
       if (res) {
         debug(res.status, res.body, res.text);
+        file.attributes.url += res.body.key
       }
       if (err) {
         if (res) {
