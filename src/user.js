@@ -101,6 +101,14 @@ module.exports = function (LY) {
           return LY.User._saveCurrentUser(loginUser)
         }).then(() => loginUser)
     },
+  
+    requestMobilePhoneVerify: function (mobilePhone) {
+      return LYRequest('users/requestMobilePhoneVerify', 'auth', 'post', {mobilephone: mobilePhone})
+    },
+  
+    verifyMobilePhone: function (mobilePhone, code) {
+      return LYRequest('users/verifyMobilePhone', 'auth', 'post', {mobilephone: mobilePhone, code: code})
+    },
     
     become: function (sessionToken) {
       let loginUser = null
