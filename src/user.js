@@ -39,19 +39,13 @@ module.exports = function (LY) {
         )
       });
     },
-    
+  
+    /**
+     * Get sessionToken of current user.
+     * @return {String} sessionToken
+     */
     getSessionToken: function () {
-      if (LY.User._sessionToken) {
-        return LY.User._sessionToken
-      }
-      var userData = LY.localStorage.getItem(LY._getLYPath(LY.User._CURRENT_USER_KEY));
-      if (!userData) {
-        return null;
-      }
-      var json = JSON.parse(userData);
-      LY.User._currentUser = json;
-      LY.User._sessionToken = json.token
-      return LY.User._sessionToken
+      return this._sessionToken;
     },
     
     logout: function () {
@@ -59,6 +53,29 @@ module.exports = function (LY) {
       return LY.localStorage.removeItemAsync(
         LY._getLYPath(LY.User._CURRENT_USER_KEY)
       )
+    },
+  
+    /**
+     * Retrieves the currently logged in AVUser with a valid session,
+     * either from memory or localStorage, if necessary.
+     * @return {Promise.<LY.User>} resolved with the currently logged in LY.User.
+     */
+    currentAsync: function() {
+      if (LY.User._currentUser) {
+        return Promise.resolve(LY.User._currentUser);
+      }
+    
+      return LY.localStorage
+        .getItemAsync(LY._getLYPath(LY.User._CURRENT_USER_KEY))
+        .then(function(userData) {
+          if (!userData) {
+            return null;
+          }
+        
+          var json = JSON.parse(userData);
+          LY.User._currentUser = json;
+          return LY.User._currentUser;
+        });
     },
   
     /**

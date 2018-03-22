@@ -45,7 +45,12 @@ const setHeaders = (authOptions = {}, signKey) => {
     if (sessionToken) {
       headers['X-LY-Session'] = sessionToken;
     } else {
-      headers['X-LY-Session'] = LY.User.getSessionToken()
+      return LY.User.currentAsync().then(currentUser => {
+        if (currentUser && currentUser._sessionToken) {
+          headers['X-LC-Session'] = currentUser._sessionToken;
+        }
+        return headers
+      })
     }
     return headers;
   });
