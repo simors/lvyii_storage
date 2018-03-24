@@ -132,7 +132,7 @@ module.exports = function (LY) {
   
     signUpWithMobilePhone: function (mobilephone, password, smsCode) {
       let loginUser = null
-      return LYRequest('users/signUpWithMobilePhone', 'auth', 'post', {username, password, smsCode})
+      return LYRequest('users/signUpWithMobilePhone', 'auth', 'post', {mobilephone, password, smsCode})
         .then((user) => {
           loginUser = user
           LY.User._currentUser = loginUser
@@ -143,7 +143,7 @@ module.exports = function (LY) {
   
     signUpOrlogInWithMobilePhone: function (mobilephone, smsCode) {
       let loginUser = null
-      return LYRequest('users/signUpOrlogInWithMobilePhone', 'auth', 'post', {username, smsCode})
+      return LYRequest('users/signUpOrlogInWithMobilePhone', 'auth', 'post', {mobilephone, smsCode})
         .then((user) => {
           loginUser = user
           LY.User._currentUser = loginUser
