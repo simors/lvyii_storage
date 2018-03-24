@@ -119,6 +119,39 @@ module.exports = function (LY) {
         }).then(() => loginUser)
     },
   
+    signUpWithUsername: function (username, password) {
+      let loginUser = null
+      return LYRequest('users/signUpWithUsername', 'auth', 'post', {username, password})
+        .then((user) => {
+          loginUser = user
+          LY.User._currentUser = loginUser
+          LY.User._sessionToken = loginUser.token
+          return LY.User._saveCurrentUser(loginUser)
+        }).then(() => loginUser)
+    },
+  
+    signUpWithMobilePhone: function (mobilephone, password, smsCode) {
+      let loginUser = null
+      return LYRequest('users/signUpWithMobilePhone', 'auth', 'post', {username, password, smsCode})
+        .then((user) => {
+          loginUser = user
+          LY.User._currentUser = loginUser
+          LY.User._sessionToken = loginUser.token
+          return LY.User._saveCurrentUser(loginUser)
+        }).then(() => loginUser)
+    },
+  
+    signUpOrlogInWithMobilePhone: function (mobilephone, smsCode) {
+      let loginUser = null
+      return LYRequest('users/signUpOrlogInWithMobilePhone', 'auth', 'post', {username, smsCode})
+        .then((user) => {
+          loginUser = user
+          LY.User._currentUser = loginUser
+          LY.User._sessionToken = loginUser.token
+          return LY.User._saveCurrentUser(loginUser)
+        }).then(() => loginUser)
+    },
+  
     requestMobilePhoneVerify: function (mobilePhone) {
       return LYRequest('users/requestMobilePhoneVerify', 'auth', 'post', {mobilephone: mobilePhone})
     },
