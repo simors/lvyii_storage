@@ -102,6 +102,9 @@ module.exports = function (LY) {
       return LYRequest('users/loginWithMobilePhone', 'auth', 'post', {mobilephone: mobilePhone, password})
         .then((user) => {
           loginUser = user
+          if (user.code && user.code != 0) {
+            return user
+          }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
@@ -117,6 +120,9 @@ module.exports = function (LY) {
       return LYRequest('users/loginWithUsername', 'auth', 'post', {username, password})
         .then((user) => {
           loginUser = user
+          if (user.code && user.code != 0) {
+            return user
+          }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
@@ -132,6 +138,9 @@ module.exports = function (LY) {
       return LYRequest('users/signUpWithUsername', 'auth', 'post', {username, password})
         .then((user) => {
           loginUser = user
+          if (user.code && user.code != 0) {
+            return user
+          }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
@@ -147,6 +156,9 @@ module.exports = function (LY) {
       return LYRequest('users/signUpWithMobilePhone', 'auth', 'post', {mobilephone, password, smsCode})
         .then((user) => {
           loginUser = user
+          if (user.code && user.code != 0) {
+            return user
+          }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
@@ -162,6 +174,9 @@ module.exports = function (LY) {
       return LYRequest('users/signUpOrlogInWithMobilePhone', 'auth', 'post', {mobilephone, smsCode})
         .then((user) => {
           loginUser = user
+          if (user.code && user.code != 0) {
+            return user
+          }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
@@ -185,6 +200,9 @@ module.exports = function (LY) {
       return LYRequest('users/me', 'auth', 'post', {sessionToken})
         .then((user) => {
           loginUser = user
+          if (user.code && user.code != 0) {
+            return user
+          }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
