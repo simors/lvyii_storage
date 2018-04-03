@@ -105,7 +105,11 @@ module.exports = function (LY) {
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
-        }).then(() => loginUser)
+        }).then(() =>
+          loginUser
+        ).catch((e) => {
+          throw e
+        })
     },
     
     loginWithUsername: function (username, password) {
@@ -116,7 +120,11 @@ module.exports = function (LY) {
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
-        }).then(() => loginUser)
+        }).then(() =>
+          loginUser
+        ).catch((e) => {
+          throw e
+        })
     },
   
     signUpWithUsername: function (username, password) {
@@ -127,7 +135,11 @@ module.exports = function (LY) {
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
-        }).then(() => loginUser)
+        }).then(() =>
+          loginUser
+        ).catch((e) => {
+          throw e
+        })
     },
   
     signUpWithMobilePhone: function (mobilephone, password, smsCode) {
@@ -138,7 +150,11 @@ module.exports = function (LY) {
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
-        }).then(() => loginUser)
+        }).then(() =>
+          loginUser
+        ).catch((e) => {
+          throw e
+        })
     },
   
     signUpOrlogInWithMobilePhone: function (mobilephone, smsCode) {
@@ -149,15 +165,19 @@ module.exports = function (LY) {
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
-        }).then(() => loginUser)
+        }).then(() =>
+          loginUser
+        ).catch((e) => {
+          throw e
+        })
     },
   
     requestMobilePhoneVerify: function (mobilePhone) {
-      return LYRequest('users/requestMobilePhoneVerify', 'auth', 'post', {mobilephone: mobilePhone})
+      return LYRequest('users/requestMobilePhoneVerify', 'auth', 'post', {mobilephone: mobilePhone}).catch((e) => {throw e})
     },
   
     verifyMobilePhone: function (mobilePhone, code) {
-      return LYRequest('users/verifyMobilePhone', 'auth', 'post', {mobilephone: mobilePhone, code: code})
+      return LYRequest('users/verifyMobilePhone', 'auth', 'post', {mobilephone: mobilePhone, code: code}).catch((e) => {throw e})
     },
     
     become: function (sessionToken) {
@@ -168,7 +188,11 @@ module.exports = function (LY) {
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
-        }).then(() => loginUser)
+        }).then(() =>
+          loginUser
+        ).catch((e) => {
+          throw e
+        })
     }
   }
 }
