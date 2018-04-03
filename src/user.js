@@ -101,7 +101,7 @@ module.exports = function (LY) {
       let loginUser = null
       return LYRequest('users/loginWithMobilePhone', 'auth', 'post', {mobilephone: mobilePhone, password})
         .then((user) => {
-          loginUser = JSON.parse(user)
+          loginUser = user
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
@@ -110,16 +110,14 @@ module.exports = function (LY) {
           return LY.User._saveCurrentUser(loginUser)
         }).then(() =>
           loginUser
-        ).catch((e) => {
-          throw e
-        })
+        )
     },
     
     loginWithUsername: function (username, password) {
       let loginUser = null
       return LYRequest('users/loginWithUsername', 'auth', 'post', {username, password})
         .then((user) => {
-          loginUser = JSON.parse(user)
+          loginUser = user
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
@@ -128,16 +126,14 @@ module.exports = function (LY) {
           return LY.User._saveCurrentUser(loginUser)
         }).then(() =>
           loginUser
-        ).catch((e) => {
-          throw e
-        })
+        )
     },
   
     signUpWithUsername: function (username, password) {
       let loginUser = null
       return LYRequest('users/signUpWithUsername', 'auth', 'post', {username, password})
         .then((user) => {
-          loginUser = JSON.parse(user)
+          loginUser = user
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
@@ -146,16 +142,14 @@ module.exports = function (LY) {
           return LY.User._saveCurrentUser(loginUser)
         }).then(() =>
           loginUser
-        ).catch((e) => {
-          throw e
-        })
+        )
     },
   
     signUpWithMobilePhone: function (mobilephone, password, smsCode) {
       let loginUser = null
       return LYRequest('users/signUpWithMobilePhone', 'auth', 'post', {mobilephone, password, smsCode})
         .then((user) => {
-          loginUser = JSON.parse(user)
+          loginUser = user
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
@@ -164,16 +158,15 @@ module.exports = function (LY) {
           return LY.User._saveCurrentUser(loginUser)
         }).then(() =>
           loginUser
-        ).catch((e) => {
-          throw e
-        })
+        )
     },
   
     signUpOrlogInWithMobilePhone: function (mobilephone, smsCode) {
       let loginUser = null
       return LYRequest('users/signUpOrlogInWithMobilePhone', 'auth', 'post', {mobilephone, smsCode})
         .then((user) => {
-          loginUser = JSON.parse(user)
+          console.log('user lib', user)
+          loginUser = user
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
@@ -182,24 +175,22 @@ module.exports = function (LY) {
           return LY.User._saveCurrentUser(loginUser)
         }).then(() =>
           loginUser
-        ).catch((e) => {
-          throw e
-        })
+        )
     },
   
     requestMobilePhoneVerify: function (mobilePhone) {
-      return LYRequest('users/requestMobilePhoneVerify', 'auth', 'post', {mobilephone: mobilePhone}).catch((e) => {throw e})
+      return LYRequest('users/requestMobilePhoneVerify', 'auth', 'post', {mobilephone: mobilePhone})
     },
   
     verifyMobilePhone: function (mobilePhone, code) {
-      return LYRequest('users/verifyMobilePhone', 'auth', 'post', {mobilephone: mobilePhone, code: code}).catch((e) => {throw e})
+      return LYRequest('users/verifyMobilePhone', 'auth', 'post', {mobilephone: mobilePhone, code: code})
     },
     
     become: function (sessionToken) {
       let loginUser = null
       return LYRequest('users/me', 'auth', 'post', {sessionToken})
         .then((user) => {
-          loginUser = JSON.parse(user)
+          loginUser = user
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
@@ -208,9 +199,7 @@ module.exports = function (LY) {
           return LY.User._saveCurrentUser(loginUser)
         }).then(() =>
           loginUser
-        ).catch((e) => {
-          throw e
-        })
+        )
     }
   }
 }
