@@ -101,9 +101,9 @@ module.exports = function (LY) {
       let loginUser = null
       return LYRequest('users/loginWithMobilePhone', 'auth', 'post', {mobilephone: mobilePhone, password})
         .then((user) => {
-          loginUser = user
-          if (user.code && user.code != 0) {
-            return user
+          loginUser = JSON.parse(user)
+          if (loginUser.code && loginUser.code != 0) {
+            return loginUser
           }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
@@ -119,9 +119,9 @@ module.exports = function (LY) {
       let loginUser = null
       return LYRequest('users/loginWithUsername', 'auth', 'post', {username, password})
         .then((user) => {
-          loginUser = user
-          if (user.code && user.code != 0) {
-            return user
+          loginUser = JSON.parse(user)
+          if (loginUser.code && loginUser.code != 0) {
+            return loginUser
           }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
@@ -137,9 +137,9 @@ module.exports = function (LY) {
       let loginUser = null
       return LYRequest('users/signUpWithUsername', 'auth', 'post', {username, password})
         .then((user) => {
-          loginUser = user
-          if (user.code && user.code != 0) {
-            return user
+          loginUser = JSON.parse(user)
+          if (loginUser.code && loginUser.code != 0) {
+            return loginUser
           }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
@@ -155,9 +155,9 @@ module.exports = function (LY) {
       let loginUser = null
       return LYRequest('users/signUpWithMobilePhone', 'auth', 'post', {mobilephone, password, smsCode})
         .then((user) => {
-          loginUser = user
-          if (user.code && user.code != 0) {
-            return user
+          loginUser = JSON.parse(user)
+          if (loginUser.code && loginUser.code != 0) {
+            return loginUser
           }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
@@ -173,9 +173,9 @@ module.exports = function (LY) {
       let loginUser = null
       return LYRequest('users/signUpOrlogInWithMobilePhone', 'auth', 'post', {mobilephone, smsCode})
         .then((user) => {
-          loginUser = user
-          if (user.code && user.code != 0) {
-            return user
+          loginUser = JSON.parse(user)
+          if (loginUser.code && loginUser.code != 0) {
+            return loginUser
           }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
@@ -199,9 +199,9 @@ module.exports = function (LY) {
       let loginUser = null
       return LYRequest('users/me', 'auth', 'post', {sessionToken})
         .then((user) => {
-          loginUser = user
-          if (user.code && user.code != 0) {
-            return user
+          loginUser = JSON.parse(user)
+          if (loginUser.code && loginUser.code != 0) {
+            return loginUser
           }
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
