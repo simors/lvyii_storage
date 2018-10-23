@@ -129,9 +129,9 @@ module.exports = function (LY) {
         )
     },
   
-    signUpWithUsername: function (username, password) {
+    signUpWithUsername: function (username, password, attributes) {
       let loginUser = null
-      return LYRequest('users/signUpWithUsername', 'auth', 'post', {username, password})
+      return LYRequest('users/signUpWithUsername', 'auth', 'post', {username, password, attributes})
         .then((user) => {
           loginUser = user
           if (loginUser.code && loginUser.code != 0) {
@@ -145,9 +145,9 @@ module.exports = function (LY) {
         )
     },
   
-    signUpWithMobilePhone: function (mobilephone, password, smsCode) {
+    signUpWithMobilePhone: function (mobilephone, password, smsCode, attributes) {
       let loginUser = null
-      return LYRequest('users/signUpWithMobilePhone', 'auth', 'post', {mobilephone, password, smsCode})
+      return LYRequest('users/signUpWithMobilePhone', 'auth', 'post', {mobilephone, password, smsCode, attributes})
         .then((user) => {
           loginUser = user
           if (loginUser.code && loginUser.code != 0) {
@@ -161,9 +161,9 @@ module.exports = function (LY) {
         )
     },
   
-    signUpOrlogInWithMobilePhone: function (mobilephone, smsCode) {
+    signUpOrlogInWithMobilePhone: function (mobilephone, smsCode, attributes) {
       let loginUser = null
-      return LYRequest('users/signUpOrlogInWithMobilePhone', 'auth', 'post', {mobilephone, smsCode})
+      return LYRequest('users/signUpOrlogInWithMobilePhone', 'auth', 'post', {mobilephone, smsCode, attributes})
         .then((user) => {
           console.log('user lib', user)
           loginUser = user
