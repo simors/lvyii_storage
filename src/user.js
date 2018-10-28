@@ -31,7 +31,6 @@ module.exports = function (LY) {
       }
       return promise.then(function() {
         user._isCurrentUser = true;
-        user._sessionToken = user.token;
         LY.User._currentUser = user;
         
         return LY.localStorage.setItemAsync(
@@ -106,6 +105,8 @@ module.exports = function (LY) {
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
+          loginUser._sessionToken = loginUser.token
+
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
@@ -122,6 +123,8 @@ module.exports = function (LY) {
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
+          loginUser._sessionToken = loginUser.token
+
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
@@ -138,6 +141,8 @@ module.exports = function (LY) {
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
+          loginUser._sessionToken = loginUser.token
+
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
@@ -154,6 +159,8 @@ module.exports = function (LY) {
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
+          loginUser._sessionToken = loginUser.token
+
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
@@ -171,6 +178,8 @@ module.exports = function (LY) {
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
+          loginUser._sessionToken = loginUser.token
+
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
@@ -195,6 +204,8 @@ module.exports = function (LY) {
           if (loginUser.code && loginUser.code != 0) {
             return loginUser
           }
+          loginUser._sessionToken = loginUser.token
+
           LY.User._currentUser = loginUser
           LY.User._sessionToken = loginUser.token
           return LY.User._saveCurrentUser(loginUser)
