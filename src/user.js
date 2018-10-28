@@ -222,8 +222,8 @@ module.exports = function (LY) {
       return LYRequest('users/requestResetPasswordBySmsCode', 'auth', 'post', {mobilephone: mobilePhone})
     },
 
-    resetPasswordBySmsCode: function (code, password) {
-      return LYRequest('users/resetPasswordBySmsCode', 'auth', 'post', {password: password, code: code})
+    resetPasswordBySmsCode: function (mobilePhone, code, password) {
+      return LYRequest('users/resetPasswordBySmsCode', 'auth', 'post', {password: password, mobilephone: mobilePhone, code: code})
     }
   }
 }
