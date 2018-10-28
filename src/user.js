@@ -31,6 +31,7 @@ module.exports = function (LY) {
       }
       return promise.then(function() {
         user._isCurrentUser = true;
+        user._sessionToken = user.token;
         LY.User._currentUser = user;
         
         return LY.localStorage.setItemAsync(
@@ -200,6 +201,18 @@ module.exports = function (LY) {
         }).then(() =>
           loginUser
         )
+    },
+
+    resetPassword: function (oldPassword, newPassword) {
+      return LYRequest('users/resetPassword', 'auth', 'post', {oldPassword, newPassword})
+    },
+
+    requestResetPasswordBySmsCode: function (mobilePhone) {
+      return LYRequest('users/requestResetPasswordBySmsCode', 'auth', 'post', {mobilephone: mobilePhone})
+    },
+
+    resetPasswordBySmsCode: function (code, password) {
+      return LYRequest('users/resetPasswordBySmsCode', 'auth', 'post', {password: password, code: code})
     }
   }
 }
