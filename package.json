@@ -1,6 +1,6 @@
 {
   "name": "lvyii_storage",
-  "version": "0.0.30",
+  "version": "0.0.31",
   "description": "Storage for Lvyii",
   "main": "./dist/node/index.js",
   "scripts": {
